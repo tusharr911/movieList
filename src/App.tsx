@@ -1,8 +1,11 @@
+import Homepage from "./Homepage";
+
 function App() {
-  return <div className="text-2xl text-center">
-    text example
-  
-  </div>;
+  return (
+    <div>
+      <Homepage></Homepage>
+    </div>
+  );
 }
 
 export default App;
