@@ -1,12 +1,16 @@
-
-
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import Loader from "./Loader";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import ErrorNotification from "./ErrorNotification";
+import { useDispatch } from "react-redux";
+import { initiateWatchList } from "../store/MovieSlice";
+import Cookies from "js-cookie";
+
 function LoginComponent() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -22,7 +26,9 @@ function LoginComponent() {
     try {
       const user = localStorage.getItem(data.email);
       if (user) {
+        Cookies.set("user", data.email);
         navigate("/");
+        dispatch(initiateWatchList(JSON.parse(user).watchList));
       } else {
         throw new Error("The user does not exist.");
       }
@@ -40,7 +46,11 @@ function LoginComponent() {
   }
   return (
     <div className="relative flex flex-col text-gray-700 bg-transparent shadow-md rounded-xl bg-clip-border bg-white px-8 pt-6 pb-8 mb-4">
-      
+      <ErrorNotification
+        message={errorMessage}
+        show={showError}
+        setShow={setShowError}
+      />
       <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
         Login
       </h4>

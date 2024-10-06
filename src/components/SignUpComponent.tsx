@@ -3,8 +3,15 @@ import Loader from "./Loader";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useSetLocalStorage } from "../utils/hook";
+import { useDispatch, useSelector } from "react-redux";
+import { signUp as SignUpRedux } from "../store/authSlice";
+import ErrorNotification from "./ErrorNotification";
+import Cookies from "js-cookie";
 
 function SignUpComponent() {
+  const dispatch = useDispatch();
+  const reduxState = useSelector((state) => state.userData);
   const [loading, setLoading] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
   const [showError, setShowError] = useState<boolean>(false);
@@ -21,6 +28,8 @@ function SignUpComponent() {
       setSubmittedData(data.email);
       const user = localStorage.getItem(data.email);
       if (!user) {
+        Cookies.set("user", data.email);
+
         localStorage.setItem(
           data.email,
           JSON.stringify({
@@ -38,12 +47,22 @@ function SignUpComponent() {
     reset();
     setLoading(false);
   };
+  useSetLocalStorage(submittedData);
+  if (submittedData) {
+    dispatch(SignUpRedux(submittedData));
+    console.log(reduxState);
+  }
 
   if (loading) {
     return <Loader />;
   }
   return (
     <div className="relative flex flex-col text-gray-700 bg-transparent shadow-md rounded-xl bg-clip-border bg-white px-8 pt-6 pb-8 mb-4">
+      <ErrorNotification
+        message={errorMessage}
+        show={showError}
+        setShow={setShowError}
+      />
       <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
         Sign Up
       </h4>
