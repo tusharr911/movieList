@@ -11,3 +11,10 @@ export const GetMovieByName = (searchQuery: string) => {
     )}&type=movie`
   );
 };
+
+
+export const GetMovieByID = (IMDB_ID: string) => {
+  return api.get(
+    `?apikey=${conf.Omdb_API_KEY}&i=${encodeURIComponent(IMDB_ID)}&type=movie`
+  );
+};
