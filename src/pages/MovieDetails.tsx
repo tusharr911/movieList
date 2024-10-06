@@ -21,7 +21,7 @@ interface Movie {
 }
 
 const MovieDetails: React.FC = () => {
-  const { imdbID } = useParams<{ imdbID: string }>(); // Get movie ID from the URL
+  const { imdbID } = useParams<{ imdbID: string }>(); 
   const [movie, setMovie] = useState<Movie | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {

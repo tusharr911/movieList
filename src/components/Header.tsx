@@ -1,4 +1,5 @@
 import Logo from "./Logo";
+import LogoutButton from "./Logout";
 import UsersAvatar from "./UsersAvatar";
 import WatchListIcon from "./WatchListIcon";
 
@@ -10,6 +11,7 @@ export default function Header() {
         <div className="flex items-center gap-5">
           <WatchListIcon></WatchListIcon>
           <UsersAvatar></UsersAvatar>
+          <LogoutButton />
         </div>
       </nav>
     </header>

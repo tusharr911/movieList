@@ -18,7 +18,6 @@ interface Movie {
 export default function Homepage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedText = useDebounceHook(searchQuery);
-  // const [fetchedMovies, setFetchedMovies] = useState<Movie[]>([]);
   const [movieAdded, setMovieAdded] = useState<string[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);

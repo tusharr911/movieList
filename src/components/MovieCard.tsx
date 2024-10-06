@@ -35,7 +35,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           <img
             src={posterUrl}
             alt={`${title} poster`}
-            className="h-full w-full object-cover object-top" // Top-aligned images
+            className="h-full w-full object-cover object-top" 
           />
         ) : (
           <div className="flex justify-center items-center h-full">

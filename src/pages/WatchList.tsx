@@ -12,7 +12,6 @@ const WatchList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Function to fetch movie data by ID
   const fetchMovieData = async (id) => {
     const apiKey = conf.Omdb_API_KEY;
     const response = await fetch(
@@ -25,7 +24,6 @@ const WatchList = () => {
   useEffect(() => {
     dispatch(initiateWatchList());
   }, [dispatch]);
-  // Use useQueries to fetch data for all movies in the watchlist
   const movieQueries = useQueries({
     queries: watchListArray.map((id) => ({
       queryKey: ["movie", id],
