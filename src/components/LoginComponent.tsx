@@ -6,7 +6,7 @@ import { useState } from "react";
 import ErrorNotification from "./ErrorNotification";
 import { useDispatch } from "react-redux";
 import { initiateWatchList } from "../store/MovieSlice";
-import Cookies from "js-cookie";
+import Cookies from "js-cookies";
 
 function LoginComponent() {
   const navigate = useNavigate();
