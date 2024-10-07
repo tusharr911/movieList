@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import conf from "../conf/conf";
+
 interface Movie {
   Title: string;
   Year: string;
@@ -21,15 +22,16 @@ interface Movie {
 }
 
 const MovieDetails: React.FC = () => {
-  const { imdbID } = useParams<{ imdbID: string }>(); 
+  const { imdbID } = useParams<{ imdbID: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
+    const apiKeyOMDB = conf.Omdb_API_KEY;
     const fetchMovieDetails = async () => {
-      const apiKey = conf.Omdb_API_KEY;
       try {
         const response = await fetch(
-          `http://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}`
+          `http://www.omdbapi.com/?apikey=${apiKeyOMDB}&i=${imdbID}`
         );
         const data = await response.json();
 

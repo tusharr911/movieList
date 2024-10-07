@@ -1,5 +1,6 @@
 import axios from "axios";
 import conf from "../conf/conf";
+
 const api = axios.create({
   baseURL: "https://www.omdbapi.com/",
 });
@@ -11,7 +12,6 @@ export const GetMovieByName = (searchQuery: string) => {
     )}&type=movie`
   );
 };
-
 
 export const GetMovieByID = (IMDB_ID: string) => {
   return api.get(

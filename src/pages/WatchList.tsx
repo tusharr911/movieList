@@ -6,16 +6,19 @@ import { initiateWatchList, removeMovieInWatchList } from "../store/MovieSlice";
 import { useNavigate } from "react-router-dom";
 import { useQueries } from "@tanstack/react-query";
 import conf from "../conf/conf";
+
 const WatchList = () => {
   const watchListArray = useSelector((state) => state.movie.watchListArray);
   const moviesLength = useSelector((state) => state.movie.length);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Function to fetch movie data by ID
   const fetchMovieData = async (id) => {
-    const apiKey = conf.Omdb_API_KEY;
+    const apiKeyOMDB = conf.Omdb_API_KEY;
+
     const response = await fetch(
-      `https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`
+      `https://www.omdbapi.com/?i=${id}&apikey=${apiKeyOMDB}`
     );
     if (!response.ok) throw new Error(`Error fetching movie with ID: ${id}`);
     const data = await response.json();
@@ -24,6 +27,7 @@ const WatchList = () => {
   useEffect(() => {
     dispatch(initiateWatchList());
   }, [dispatch]);
+  // Use useQueries to fetch data for all movies in the watchlist
   const movieQueries = useQueries({
     queries: watchListArray.map((id) => ({
       queryKey: ["movie", id],
@@ -44,21 +48,13 @@ const WatchList = () => {
     dispatch(removeMovieInWatchList(imdbID));
   };
 
-  function handleClickHome() {
-    navigate("/");
-  }
+
 
   if (loading) return <Loader />;
   if (error) return <div>{error.message}</div>;
 
   return (
     <div className="max-w-screen-lg mx-auto p-4">
-      <h2
-        onClick={handleClickHome}
-        className="text-2xl font-bold mb-4 cursor-pointer"
-      >
-        Movie List
-      </h2>
       {moviesLength === 0 && (
         <div className="pt-10">
           <img

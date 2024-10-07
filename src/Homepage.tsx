@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Header from "./components/Header";
+
 import SearchBar from "./components/SearchBar";
 import MovieCard from "./components/MovieCard";
 import { GetMovieByName } from "./services/getServices";
@@ -7,6 +7,9 @@ import { useDebounceHook } from "./utils/hook";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "./components/Loader";
 import { useDispatch } from "react-redux";
+import { addMovieInWatchList, initiateWatchList } from "./store/MovieSlice";
+import ErrorNotification from "./components/ErrorNotification";
+import Cookie from "js-cookie";
 interface Movie {
   imdbID: string;
   Title: string;
@@ -18,9 +21,10 @@ interface Movie {
 export default function Homepage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedText = useDebounceHook(searchQuery);
+  const dispatch = useDispatch();
   const [movieAdded, setMovieAdded] = useState<string[]>([]);
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [showError, setShowError] = useState<boolean>(false);
+  const [notificationMessage, setNotificationMessage] = useState<string>("");
 
   const fetchMovies = async () => {
     if (!debouncedText) return [];
@@ -43,15 +47,37 @@ export default function Homepage() {
   function handleSearchQuery(query: string) {
     setSearchQuery(query);
   }
+  useEffect(() => {
+    dispatch(initiateWatchList());
+  }, [dispatch]);
 
   const handleAddToWatchlist = (imdbID: string): void => {
+    dispatch(addMovieInWatchList(imdbID));
     if (!movieAdded.includes(imdbID))
       setMovieAdded((prev) => [...prev, imdbID]);
   };
+  useEffect(() => {
+    dispatch(initiateWatchList());
+
+    const username = Cookie.get("user");
+
+    if (username) {
+      setNotificationMessage(`Welcome ${username}`);
+      setShowError(true);
+    } else {
+      setNotificationMessage("User not found");
+      setShowError(true);
+    }
+  }, [dispatch]);
+
   return (
     <div className="w-[65vw] mx-auto my-5 flex flex-col gap-5 ">
-      <Header></Header>
-
+      <ErrorNotification
+        message={notificationMessage}
+        show={showError}
+        setShow={setShowError}
+        success={true}
+      />
       <SearchBar
         searchQuery={searchQuery}
         handleSearchQuery={handleSearchQuery}
@@ -72,7 +98,7 @@ export default function Homepage() {
       {isLoading && <Loader />}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {Boolean(fetchedMovies.length) &&
-          fetchedMovies.map((movie: Movie) => (
+          fetchedMovies.map((movie) => (
             <MovieCard
               key={movie.imdbID}
               title={movie.Title}

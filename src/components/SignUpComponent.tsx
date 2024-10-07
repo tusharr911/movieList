@@ -4,14 +4,10 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useSetLocalStorage } from "../utils/hook";
-import { useDispatch, useSelector } from "react-redux";
-import { signUp as SignUpRedux } from "../store/authSlice";
 import ErrorNotification from "./ErrorNotification";
 import Cookies from "js-cookie";
 
 function SignUpComponent() {
-  const dispatch = useDispatch();
-  const reduxState = useSelector((state) => state.userData);
   const [loading, setLoading] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
   const [showError, setShowError] = useState<boolean>(false);
@@ -38,7 +34,7 @@ function SignUpComponent() {
           })
         );
       } else {
-        throw new Error("The user already exist.");
+        throw new Error("The user already exist. Please use Login");
       }
     } catch (error) {
       setShowError(true);
@@ -48,10 +44,6 @@ function SignUpComponent() {
     setLoading(false);
   };
   useSetLocalStorage(submittedData);
-  if (submittedData) {
-    dispatch(SignUpRedux(submittedData));
-    console.log(reduxState);
-  }
 
   if (loading) {
     return <Loader />;

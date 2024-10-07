@@ -4,12 +4,14 @@ interface ErrorNotificationProps {
   message?: string;
   show: boolean;
   setShow: (show: boolean) => void;
+  success?: boolean;
 }
 
 const ErrorNotification: React.FC<ErrorNotificationProps> = ({
   message = "An unexpected error occurred.",
   show,
   setShow,
+  success,
 }) => {
   useEffect(() => {
     if (show) {
@@ -23,26 +25,16 @@ const ErrorNotification: React.FC<ErrorNotificationProps> = ({
 
   return (
     <div
-      className={`fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-2 transition-transform transform ${
+      className={`fixed top-4 right-4 ${
+        success ? "bg-green-500" : "bg-red-500"
+      } text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-2 transition-transform transform ${
         show ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       }`}
       role="alert"
     >
-      <svg
-        className="w-6 h-6 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-      <span className="font-medium">Error:</span>
+      
+      {!success && <span className="font-medium">Error:</span>}
+
       <span>{message}</span>
       <button
         onClick={() => setShow(false)}

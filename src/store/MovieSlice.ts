@@ -47,6 +47,7 @@ const MovieSlice = createSlice({
     },
     clearWatchList: (state) => {
       state.watchListArray = [];
+      state.length = 0;
     },
   },
 });

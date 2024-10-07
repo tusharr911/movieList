@@ -30,7 +30,7 @@ function LoginComponent() {
         navigate("/");
         dispatch(initiateWatchList(JSON.parse(user).watchList));
       } else {
-        throw new Error("The user does not exist.");
+        throw new Error("The user does not exist. Please Sign up.");
       }
     } catch (error) {
       setShowError(true);
