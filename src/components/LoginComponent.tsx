@@ -18,7 +18,7 @@ const LoginComponent: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  
+
   const {
     register,
     handleSubmit,
@@ -31,7 +31,10 @@ const LoginComponent: React.FC = () => {
     try {
       const user = localStorage.getItem(data.email);
       if (user) {
-        Cookies.set("user", data.email);
+        Cookies.set("user", data.email, {
+          sameSite: "None",
+          secure: true,
+        });
         navigate("/");
         dispatch(initiateWatchList(JSON.parse(user).watchList));
       } else {

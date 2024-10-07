@@ -7,7 +7,7 @@ import Tooltip from "./Tooltip";
 export default function LogoutButton() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  function handleLogout():void {
+  function handleLogout(): void {
     Cookies.remove("user");
     dispatch(clearWatchList());
     navigate("/login", { replace: true });

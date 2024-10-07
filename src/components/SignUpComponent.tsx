@@ -6,7 +6,7 @@ import Button from "./Button";
 import Loader from "./Loader";
 import ErrorNotification from "./ErrorNotification";
 import { useSetLocalStorage } from "../utils/hook";
-
+import { useNavigate } from "react-router-dom";
 type FormData = {
   email: string;
 };
@@ -16,7 +16,7 @@ function SignUpComponent() {
   const [submittedData, setSubmittedData] = useState<string>("");
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -30,7 +30,10 @@ function SignUpComponent() {
       setSubmittedData(data.email);
       const user = localStorage.getItem(data.email);
       if (!user) {
-        Cookies.set("user", data.email);
+        Cookies.set("user", data.email, {
+          sameSite: "None",
+          secure: true,
+        });
 
         localStorage.setItem(
           data.email,
@@ -53,6 +56,7 @@ function SignUpComponent() {
     } finally {
       reset();
       setLoading(false);
+      navigate("/");
     }
   };
 
