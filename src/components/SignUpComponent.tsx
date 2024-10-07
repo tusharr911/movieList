@@ -33,6 +33,7 @@ function SignUpComponent() {
             watchList: [],
           })
         );
+        throw new Error("Account created. Please Login");
       } else {
         throw new Error("The user already exist. Please use Login");
       }
@@ -54,6 +55,7 @@ function SignUpComponent() {
         message={errorMessage}
         show={showError}
         setShow={setShowError}
+        success
       />
       <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
         Sign Up

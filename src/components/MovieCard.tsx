@@ -22,7 +22,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const handleMovieChange = () => {
-    navigate(imdbID);
+    navigate(`/${imdbID}`);
   };
   return (
     <div className="shadow-xl py-2 px-2 flex flex-col gap-2 rounded-lg hover:shadow-2xl cursor-pointer transition-transform duration-300">
