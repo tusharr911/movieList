@@ -32,15 +32,13 @@ export default function SearchBar({ handleSearchQuery }: SearchBarProps) {
         placeholder="Search movies"
         className="w-full h-9 pl-4 pr-10 outline-none hover:shadow-lg transition-all ring-1 ring-black/10 hover:ring-0"
       />
-      {errors.query && (
-        <p className="text-red-500">{errors.query.message}</p>
-      )}
+      {errors.query && <p className="text-red-500">{errors.query.message}</p>}
       <button
         type="submit"
         className="absolute right-2 top-2"
         disabled={isSubmitting}
       >
-        <img src="/search.svg" alt="search icon" className="w-5 h-5" />
+        <img src="/search1.svg" alt="search icon" className="w-5 h-5" />
       </button>
     </form>
   );
