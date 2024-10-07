@@ -2,7 +2,7 @@ import axios from "axios";
 import conf from "../conf/conf";
 
 const api = axios.create({
-  baseURL: "https://www.omdbapi.com/",
+  baseURL: "http://www.omdbapi.com/",
 });
 
 export const GetMovieByName = (searchQuery: string) => {

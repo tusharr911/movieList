@@ -38,7 +38,7 @@ To get started, follow these steps:
 
    ```bash
    git clone https://github.com/tusharr911/movieList.git
-   cd movieList
+   cd movieListtt4715356
 
    ```
 
