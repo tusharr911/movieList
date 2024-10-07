@@ -2,7 +2,7 @@ import axios from "axios";
 import conf from "../conf/conf";
 
 const api = axios.create({
-  baseURL: "http://www.omdbapi.com/",
+  baseURL: "https://www.omdbapi.com/",
 });
 
 export const GetMovieByName = (searchQuery: string) => {
@@ -15,6 +15,8 @@ export const GetMovieByName = (searchQuery: string) => {
 
 export const GetMovieByID = (IMDB_ID: string) => {
   return api.get(
-    `?apikey=${conf.Omdb_API_KEY}&i=${encodeURIComponent(IMDB_ID)}&type=movie`
+    `http://www.omdbapi.com/?apikey=${conf.Omdb_API_KEY}&i=${encodeURIComponent(
+      IMDB_ID
+    )}&type=movie`
   );
 };
