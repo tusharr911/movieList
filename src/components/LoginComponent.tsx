@@ -1,27 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import Loader from "./Loader";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import ErrorNotification from "./ErrorNotification";
 import { useDispatch } from "react-redux";
 import { initiateWatchList } from "../store/MovieSlice";
 import Cookies from "js-cookie";
 
-function LoginComponent() {
+interface LoginFormInputs {
+  email: string;
+}
+
+const LoginComponent: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm();
+  } = useForm<LoginFormInputs>();
 
-  const login = (data) => {
+  const login: SubmitHandler<LoginFormInputs> = (data) => {
     setLoading(true);
     try {
       const user = localStorage.getItem(data.email);
@@ -32,9 +37,13 @@ function LoginComponent() {
       } else {
         throw new Error("The user does not exist. Please Sign up.");
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unknown error occurred.");
+      }
       setShowError(true);
-      setErrorMessage(error.message);
     } finally {
       setLoading(false);
       reset();
@@ -44,6 +53,7 @@ function LoginComponent() {
   if (loading) {
     return <Loader />;
   }
+
   return (
     <div className="relative flex flex-col text-gray-700 bg-transparent shadow-md rounded-xl bg-clip-border bg-white px-8 pt-6 pb-8 mb-4">
       <ErrorNotification
@@ -88,7 +98,7 @@ function LoginComponent() {
         <Button
           className="mt-6 block w-full select-none rounded-lg bg-gray-900 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           type="submit"
-          disabled={isSubmitting ? true : false}
+          disabled={isSubmitting}
         >
           sign in
         </Button>
@@ -101,6 +111,6 @@ function LoginComponent() {
       </form>
     </div>
   );
-}
+};
 
 export default LoginComponent;

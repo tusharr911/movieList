@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import SearchBar from "./components/SearchBar";
 import MovieCard from "./components/MovieCard";
 import { GetMovieByName } from "./services/getServices";
@@ -10,23 +9,16 @@ import { useDispatch } from "react-redux";
 import { addMovieInWatchList, initiateWatchList } from "./store/MovieSlice";
 import ErrorNotification from "./components/ErrorNotification";
 import Cookie from "js-cookie";
-interface Movie {
-  imdbID: string;
-  Title: string;
-  Poster: string;
-  Year: string;
-  rating: string;
-}
-
-export default function Homepage() {
-  const [searchQuery, setSearchQuery] = useState("");
+import { Movie } from "./utils/types";
+const Homepage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedText = useDebounceHook(searchQuery);
   const dispatch = useDispatch();
   const [movieAdded, setMovieAdded] = useState<string[]>([]);
   const [showError, setShowError] = useState<boolean>(false);
   const [notificationMessage, setNotificationMessage] = useState<string>("");
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (): Promise<Movie[]> => {
     if (!debouncedText) return [];
     const movies = await GetMovieByName(debouncedText);
     return movies?.data?.Search || [];
@@ -34,9 +26,9 @@ export default function Homepage() {
 
   const {
     isLoading,
-    error,
+
     data: fetchedMovies = [],
-  } = useQuery({
+  } = useQuery<Movie[]>({
     queryKey: ["movies", debouncedText],
     queryFn: fetchMovies,
     enabled: !!debouncedText,
@@ -44,9 +36,10 @@ export default function Homepage() {
     staleTime: 1000 * 60 * 5,
   });
 
-  function handleSearchQuery(query: string) {
+  function handleSearchQuery(query: string): void {
     setSearchQuery(query);
   }
+
   useEffect(() => {
     dispatch(initiateWatchList());
   }, [dispatch]);
@@ -56,9 +49,8 @@ export default function Homepage() {
     if (!movieAdded.includes(imdbID))
       setMovieAdded((prev) => [...prev, imdbID]);
   };
-  useEffect(() => {
-    dispatch(initiateWatchList());
 
+  useEffect(() => {
     const username = Cookie.get("user");
 
     if (username) {
@@ -78,19 +70,17 @@ export default function Homepage() {
         setShow={setShowError}
         success={true}
       />
-      <SearchBar
-        searchQuery={searchQuery}
-        handleSearchQuery={handleSearchQuery}
-      ></SearchBar>
+      <SearchBar handleSearchQuery={handleSearchQuery} />
       {!fetchedMovies.length && !isLoading && (
         <>
           <img
             className="mx-auto mt-5"
             src="/empty.svg"
+            alt="Empty Search Result"
             height={"40%"}
             width={"40%"}
           />
-          <p className=" text-center mt-5 text-gray-500 font-semibold">
+          <p className="text-center mt-5 text-gray-500 font-semibold">
             Please enter the movie name you want to search
           </p>
         </>
@@ -112,4 +102,6 @@ export default function Homepage() {
       </div>
     </div>
   );
-}
+};
+
+export default Homepage;

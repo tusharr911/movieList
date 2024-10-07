@@ -1,8 +1,13 @@
-import React, { useId } from "react";
+import React, { useId, ForwardedRef, InputHTMLAttributes } from "react";
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  className?: string;
+}
 
 const Input = React.forwardRef(function Input(
-  { type = "text", label, className = "", ...props },
-  ref
+  { type = "text", label, className = "", ...props }: InputProps,
+  ref: ForwardedRef<HTMLInputElement>
 ) {
   const id = useId();
 
@@ -13,8 +18,9 @@ const Input = React.forwardRef(function Input(
           {label}
         </label>
       )}
-      <input type={type} className={`${className}`} ref={ref} {...props} />
+      <input id={id} type={type} className={`${className}`} ref={ref} {...props} />
     </div>
   );
 });
+
 export default Input;

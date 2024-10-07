@@ -3,35 +3,28 @@ import MovieCard from "../components/MovieCard";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { initiateWatchList, removeMovieInWatchList } from "../store/MovieSlice";
-import { useNavigate } from "react-router-dom";
 import { useQueries } from "@tanstack/react-query";
-import conf from "../conf/conf";
+import { GetMovieByID } from "../services/getServices";
+import { Movie } from "../utils/types";
 
-const WatchList = () => {
-  const watchListArray = useSelector((state) => state.movie.watchListArray);
-  const moviesLength = useSelector((state) => state.movie.length);
+const WatchList: React.FC = () => {
+  const watchListArray = useSelector(
+    (state: { movie: { watchListArray: string[] } }) =>
+      state.movie.watchListArray
+  );
+  const moviesLength = useSelector(
+    (state: { movie: { length: number } }) => state.movie.length
+  );
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  // Function to fetch movie data by ID
-  const fetchMovieData = async (id) => {
-    const apiKeyOMDB = conf.Omdb_API_KEY;
-
-    const response = await fetch(
-      `https://www.omdbapi.com/?i=${id}&apikey=${apiKeyOMDB}`
-    );
-    if (!response.ok) throw new Error(`Error fetching movie with ID: ${id}`);
-    const data = await response.json();
-    return data;
-  };
   useEffect(() => {
     dispatch(initiateWatchList());
   }, [dispatch]);
-  // Use useQueries to fetch data for all movies in the watchlist
+
   const movieQueries = useQueries({
     queries: watchListArray.map((id) => ({
       queryKey: ["movie", id],
-      queryFn: () => fetchMovieData(id),
+      queryFn: () => GetMovieByID(id).then((response) => response.data),
       enabled: !!id,
       staleTime: 1000 * 60 * 5,
     })),
@@ -39,19 +32,20 @@ const WatchList = () => {
 
   const movies = movieQueries
     .map((query) => query.data)
-    .filter((movie) => movie);
+    .filter((movie): movie is Movie => movie !== undefined);
 
   const loading = movieQueries.some((query) => query.isLoading);
   const error = movieQueries.find((query) => query.isError)?.error;
 
-  const handleRemoveoWatchlist = (imdbID: string) => {
+  const handleRemoveFromWatchlist = (imdbID: string) => {
     dispatch(removeMovieInWatchList(imdbID));
   };
 
-
-
   if (loading) return <Loader />;
-  if (error) return <div>{error.message}</div>;
+  if (error)
+    return (
+      <div>{error instanceof Error ? error.message : "An error occurred"}</div>
+    );
 
   return (
     <div className="max-w-screen-lg mx-auto p-4">
@@ -60,10 +54,11 @@ const WatchList = () => {
           <img
             className="mx-auto mt-5"
             src="/empty.svg"
+            alt="Empty Wishlist"
             height={"40%"}
             width={"40%"}
           />
-          <p className=" text-center mt-5 text-gray-500 font-semibold">
+          <p className="text-center mt-5 text-gray-500 font-semibold">
             Empty Wishlist
           </p>
         </div>
@@ -76,7 +71,7 @@ const WatchList = () => {
             posterUrl={movie.Poster}
             year={movie.Year}
             imdbID={movie.imdbID}
-            onAddToWatchlist={() => handleRemoveoWatchlist(movie.imdbID)}
+            onAddToWatchlist={() => handleRemoveFromWatchlist(movie.imdbID)}
             remove
           />
         ))}

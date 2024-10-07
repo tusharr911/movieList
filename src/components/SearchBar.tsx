@@ -1,22 +1,24 @@
 import { useForm } from "react-hook-form";
+
 type SearchBarProps = {
-  searchQuery: string;
   handleSearchQuery: (query: string) => void;
 };
 
-export default function SearchBar({
-  searchQuery,
-  handleSearchQuery,
-}: SearchBarProps) {
-  function handleQuery(data) {
-    handleSearchQuery(data.query);
-  }
+type FormData = {
+  query: string;
+};
+
+export default function SearchBar({ handleSearchQuery }: SearchBarProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
-  } = useForm();
+  } = useForm<FormData>();
+
+  function handleQuery(data: FormData) {
+    handleSearchQuery(data.query);
+  }
+
   return (
     <form
       onSubmit={handleSubmit(handleQuery)}
@@ -28,14 +30,17 @@ export default function SearchBar({
         })}
         type="search"
         placeholder="Search movies"
-        className="w-full h-9 pl-4 pr-10 outline-none hover:shadow-lg transition-all ring-1 ring-black/10 hover:ring-0  "
+        className="w-full h-9 pl-4 pr-10 outline-none hover:shadow-lg transition-all ring-1 ring-black/10 hover:ring-0"
       />
+      {errors.query && (
+        <p className="text-red-500">{errors.query.message}</p>
+      )}
       <button
         type="submit"
         className="absolute right-2 top-2"
-        disabled={isSubmitting ? true : false}
+        disabled={isSubmitting}
       >
-        <img src="/search.svg" alt="search icon" className="w-5 h-5 " />
+        <img src="/search.svg" alt="search icon" className="w-5 h-5" />
       </button>
     </form>
   );

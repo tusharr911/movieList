@@ -28,6 +28,7 @@ const MovieDetails: React.FC = () => {
 
   useEffect(() => {
     const apiKeyOMDB = conf.Omdb_API_KEY;
+
     const fetchMovieDetails = async () => {
       try {
         const response = await fetch(
@@ -40,8 +41,12 @@ const MovieDetails: React.FC = () => {
         } else {
           setError(data.Error);
         }
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unexpected error occurred.");
+        }
       }
     };
 

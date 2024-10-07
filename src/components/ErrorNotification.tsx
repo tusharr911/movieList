@@ -25,7 +25,7 @@ const ErrorNotification: React.FC<ErrorNotificationProps> = ({
 
   return (
     <div
-      className={`fixed top-4 right-4 ${
+      className={`fixed top-16 right-4 ${
         success ? "bg-green-500" : "bg-red-500"
       } text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-2 transition-transform transform ${
         show ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"

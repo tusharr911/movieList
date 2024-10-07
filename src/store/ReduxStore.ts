@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import authReducer from "./authSlice";
-import movieReducer from "./MovieSlice";
+import movieReducer, { MovieState } from "./MovieSlice";
+
 export const store = configureStore({
   reducer: {
-    // auth: authReducer,
     movie: movieReducer,
   },
 });
+
+export type RootState = {
+  movie: MovieState;
+};
