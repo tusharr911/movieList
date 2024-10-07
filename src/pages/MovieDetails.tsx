@@ -32,7 +32,7 @@ const MovieDetails: React.FC = () => {
     const fetchMovieDetails = async () => {
       try {
         const response = await fetch(
-          `http://www.omdbapi.com/?apikey=${apiKeyOMDB}&i=${imdbID}`
+          `https://www.omdbapi.com/?apikey=${apiKeyOMDB}&i=${imdbID}`
         );
         const data = await response.json();
 

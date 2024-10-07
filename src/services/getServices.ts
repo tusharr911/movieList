@@ -15,7 +15,7 @@ export const GetMovieByName = (searchQuery: string) => {
 
 export const GetMovieByID = (IMDB_ID: string) => {
   return api.get(
-    `http://www.omdbapi.com/?apikey=${conf.Omdb_API_KEY}&i=${encodeURIComponent(
+    `?apikey=${conf.Omdb_API_KEY}&i=${encodeURIComponent(
       IMDB_ID
     )}&type=movie`
   );
